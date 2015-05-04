@@ -4,6 +4,17 @@
 #define MAX 26
 using namespace std;
 
+/*
+Insertion: O(log n)
+Deletion:  O(log n)
+Query: O(log n)
+
+n: Length of word
+*/
+
+/*
+The Trie node containing array of pointers to each link for each alphabet and data i.e the letter
+*/
 typedef struct TrieNode
 {
     char data;
@@ -11,6 +22,10 @@ typedef struct TrieNode
     int endOfString;
 }TrieNode;
 
+
+/*
+Wrapper for the actual Trie containing header node and number of words in the Trie
+*/
 typedef struct Trie
 {
     int count;
@@ -18,7 +33,6 @@ typedef struct Trie
 }Trie;
 
 bool insertSuccessful = false;
-
 
 void printStack(vector<char>&);
 TrieNode* createNode();
@@ -32,7 +46,9 @@ void printTrie(Trie *);
 void printTrieUtil(TrieNode*,vector<char> &);
 
 
-
+/*
+Initializes Trie data structure using malloc
+*/
 Trie* createTrie()
 {
     Trie *node = (Trie *)malloc(sizeof(Trie));
@@ -43,6 +59,9 @@ Trie* createTrie()
     return node;
 }
 
+/*
+Initializes An individual Trie node if not present for the alphabet
+*/
 TrieNode* createNode(char data)
 {
     TrieNode *node = (TrieNode *)malloc(sizeof(TrieNode));
@@ -62,6 +81,9 @@ TrieNode* createNode()
     return node;
 }
 
+/*
+Calls insertUtil function sending the trie pointer and the word to be inserted
+*/
 Trie* insertInTrie(Trie *t, char word[])
 {
     insertUtil(t->root,word,0);
@@ -71,14 +93,18 @@ Trie* insertInTrie(Trie *t, char word[])
     return t;
 }
 
+/*
+function to insert a word, checks letter by letter
+*/
 void insertUtil(TrieNode *root, char word[], int i)
 {
+    //check if end of string reached
     if(word[i] == '\0')
     {   
         root->endOfString = 1;
         return;
     }
-
+    //if pointer is not null, letter exists then go to the node else create the node
     if(!root->links[((int)(word[i]))-97])
         root->links[((int)(word[i]))-97] = createNode(word[i]);
     root = root->links[((int)(word[i]))-97];
@@ -87,6 +113,9 @@ void insertUtil(TrieNode *root, char word[], int i)
     return;
 }
 
+/*
+Function to search if Trie contains the word by calling searchUtil
+*/
 bool searchTrie(Trie *t, char *word)
 {
     if(t->root == NULL)
@@ -94,6 +123,9 @@ bool searchTrie(Trie *t, char *word)
     return searchUtil(t->root,word,0);
 }
 
+/*
+Function to search going by checking each letter in word with the present TrieNode->data
+*/
 bool searchUtil(TrieNode *root, char word[], int i)
 {
     if(!root)
@@ -109,6 +141,10 @@ bool searchUtil(TrieNode *root, char word[], int i)
     return searchUtil(root,word,i);
 
 }
+
+/*
+DFS on the Data Structure, printing all words
+*/
 void printTrieUtil(TrieNode *node,vector<char> &v)
 {
     if(node->endOfString)
@@ -138,4 +174,6 @@ void printTrie(Trie *t)
     if(t->root)
         printTrieUtil(t->root,v);
 }
+
+
 
